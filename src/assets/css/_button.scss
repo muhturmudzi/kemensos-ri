@@ -1,0 +1,11 @@
+.btn {
+  @apply inline-block p-2.5 rounded-lg text-base font-semibold;
+
+  &--primary {
+    @apply text-white bg-[#369AB0];
+  }
+
+  &--primary-outline {
+    @apply text-[#369AB0] border border-solid border-[#369AB0];
+  }
+}
