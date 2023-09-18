@@ -44,7 +44,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  changeValue: {
+  modelValue: {
     type: String
   }
 })
@@ -58,7 +58,7 @@ const onInput = (event) => {
 }
 
 watch(
-  () => props.changeValue,
+  () => props.modelValue,
   (val) => {
     value.value = val
   }

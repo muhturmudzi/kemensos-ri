@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { reactive } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
+import axios from '@/services/axios.config.js'
 import { Form } from 'vee-validate'
 import * as yup from 'yup'
 import Step from '@/components/Step.vue'
@@ -21,6 +22,10 @@ const formValues = reactive({
   noKk: '',
   bornDate: '',
   gender: '',
+  province: '',
+  regency: '',
+  district: '',
+  village: '',
   address: '',
   rt: '',
   rw: '',
@@ -28,6 +33,73 @@ const formValues = reactive({
   incomeAfter: '',
   reason: '',
 })
+
+const listProvince = ref([])
+const provSelected = ref('')
+const getProvinces = async () => {
+  try {
+    const res = await axios.get('/provinces.json')
+    listProvince.value = res
+  } catch (error) {
+    console.error(error)
+  }
+}
+watch(
+  () => provSelected.value,
+  () => getRegencies()
+)
+
+const listRegency = ref([])
+const regSelected = ref('')
+const getRegencies = async () => {
+  regSelected.value = ''
+  disctSelected.value = ''
+  vilSelected.value = ''
+
+  try {
+    const res = await axios.get(`/regencies/${provSelected.value}.json`)
+    listRegency.value = res
+  } catch (error) {
+    console.error(error)
+  }
+}
+watch(
+  () => regSelected.value,
+  () => getDistricts()
+)
+
+const listDistrict = ref([])
+const disctSelected = ref('')
+const getDistricts = async () => {
+  disctSelected.value = ''
+  vilSelected.value = ''
+  if (!regSelected.value) return
+
+  try {
+    const res = await axios.get(`/districts/${regSelected.value}.json`)
+    listDistrict.value = res
+  } catch (error) {
+    console.error(error)
+  }
+}
+watch(
+  () => disctSelected.value,
+  () => getVillages()
+)
+
+const listVillage = ref([])
+const vilSelected = ref('')
+const getVillages = async () => {
+  vilSelected.value = ''
+  if (!disctSelected.value) return
+
+  try {
+    const res = await axios.get(`/villages/${disctSelected.value}.json`)
+    listVillage.value = res
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 yup.setLocale({
   mixed: {
@@ -53,6 +125,10 @@ const schema = yup.object({
       }
     ).label('Tanggal lahir'),
   gender: yup.string().required().label('Jenis kelamin'),
+  province: yup.string().required().label('Provinsi'),
+  regency: yup.string().required().label('Kab/Kota'),
+  district: yup.string().required().label('Kecamatan'),
+  village: yup.string().required().label('Kelurahan'),
   address: yup.string().required().max(255, 'Maks 255 karakter').label('Alamat'),
   rt: yup.string().required().label('RT'),
   rw: yup.string().required().label('RW'),
@@ -65,6 +141,10 @@ const goVerify = (values) => {
   console.log(values)
   router.push('/verify')
 }
+
+onMounted(() => {
+  getProvinces()
+})
 </script>
 
 <template>
@@ -113,6 +193,50 @@ const goVerify = (values) => {
         />
       </div>
 
+      <div class="w-full h-[1px] bg-[#E0E0E0] my-7"></div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <InputSelect
+          label="Provinsi"
+          name="province"
+          placeholder="Pilih provinsi"
+          :listData="listProvince"
+          valueKey="id"
+          labelKey="name"
+          v-model="provSelected"
+        />
+
+        <InputSelect
+          label="Kab/Kota"
+          name="regency"
+          placeholder="Pilih kab/kota"
+          :listData="listRegency"
+          valueKey="id"
+          labelKey="name"
+          v-model="regSelected"
+        />
+
+        <InputSelect
+          label="Kecamatan"
+          name="district"
+          placeholder="Pilih kecamatan"
+          :listData="listDistrict"
+          valueKey="id"
+          labelKey="name"
+          v-model="disctSelected"
+        />
+
+        <InputSelect
+          label="Kelurahan"
+          name="village"
+          placeholder="Pilih kelurahan"
+          :listData="listVillage"
+          valueKey="id"
+          labelKey="name"
+          v-model="vilSelected"
+        />
+      </div>
+
       <InputArea
         label="Alamat"
         name="address"
@@ -132,7 +256,11 @@ const goVerify = (values) => {
           name="rw"
           placeholder="Contoh: 012"
         />
+      </div>
 
+      <div class="w-full h-[1px] bg-[#E0E0E0] my-7"></div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <InputText
           label="Penghasilan Sebelum Pandemi"
           name="incomeBefore"

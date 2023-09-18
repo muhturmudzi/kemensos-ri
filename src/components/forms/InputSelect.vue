@@ -26,6 +26,7 @@
 
 <script setup>
 import { useField } from 'vee-validate'
+import { watch } from 'vue'
 
 const props = defineProps({
   name: {
@@ -54,6 +55,9 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  modelValue: {
+    type: String
   }
 })
 
@@ -64,4 +68,11 @@ const onChange = (event) => {
   handleChange(event, true)
   emit('update:modelValue', event.target.value)
 }
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    value.value = val
+  }
+)
 </script>
