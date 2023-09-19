@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://www.emsifa.com/api-wilayah-indonesia/api'
+  baseURL: 'https://www.emsifa.com/api-wilayah-indonesia/api'
 })
 
 instance.interceptors.request.use(
