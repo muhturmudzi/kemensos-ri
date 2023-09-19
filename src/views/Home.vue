@@ -8,6 +8,7 @@ import Step from '@/components/Step.vue'
 import InputText from '@/components/forms/InputText.vue'
 import InputSelect from '@/components/forms/InputSelect.vue'
 import InputArea from '@/components/forms/InputArea.vue'
+import InputFile from '@/components/forms/InputFile.vue'
 
 const router = useRouter()
 
@@ -22,6 +23,8 @@ const formValues = reactive({
   noKk: '',
   bornDate: '',
   gender: '',
+  fileKtp: '',
+  fileKK: '',
   province: '',
   regency: '',
   district: '',
@@ -125,6 +128,8 @@ const schema = yup.object({
       }
     ).label('Tanggal lahir'),
   gender: yup.string().required().label('Jenis kelamin'),
+  fileKtp: yup.string().required().label('KTP'),
+  fileKK: yup.string().required().label('Kartu Keluarga'),
   province: yup.string().required().label('Provinsi'),
   regency: yup.string().required().label('Kab/Kota'),
   district: yup.string().required().label('Kecamatan'),
@@ -190,6 +195,20 @@ onMounted(() => {
           :listData="listGender"
           valueKey="value"
           labelKey="label"
+        />
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <InputFile
+          label="KTP"
+          name="fileKtp"
+          placeholder="Pilih file untuk upload KTP"
+        />
+
+        <InputFile
+          label="Kartu Keluarga"
+          name="fileKK"
+          placeholder="Pilih file untuk upload Kartu Keluarga"
         />
       </div>
 
