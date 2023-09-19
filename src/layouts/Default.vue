@@ -1,5 +1,10 @@
 <script setup>
-import Header from '@/components/layouts/Header.vue';
+import { useGeneralStore } from '@/stores/general'
+import Header from '@/components/layouts/Header.vue'
+import Loader from '@/components/Loader.vue'
+
+const generalStore = useGeneralStore()
+
 </script>
 
 <template>
@@ -22,4 +27,6 @@ import Header from '@/components/layouts/Header.vue';
       </main>
     </div>
   </div>
+
+  <Loader v-if="generalStore.loading" />
 </template>

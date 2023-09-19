@@ -1,0 +1,15 @@
+.table {
+  @apply w-full;
+
+  tr {
+    @apply grid grid-cols-1 sm:grid-cols-[250px_1fr] mb-4 sm:mb-0;
+
+    th {
+      @apply border border-solid border-[#E0E0E0] bg-[#F5F5F5] text-[#369AB0] text-left p-2;
+    }
+  
+    td {
+      @apply border border-solid border-[#E0E0E0] p-2 w-full;
+    }
+  }
+}

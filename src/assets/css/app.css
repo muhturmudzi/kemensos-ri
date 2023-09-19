@@ -60,4 +60,17 @@
 }
 .btn--primary-outline {
   @apply text-[#369AB0] border border-solid border-[#369AB0];
+}
+
+.table {
+  @apply w-full;
+}
+.table tr {
+  @apply grid grid-cols-1 sm:grid-cols-[250px_1fr] mb-4 sm:mb-0;
+}
+.table tr th {
+  @apply border border-solid border-[#E0E0E0] bg-[#F5F5F5] text-[#369AB0] text-left p-2;
+}
+.table tr td {
+  @apply border border-solid border-[#E0E0E0] p-2 w-full;
 }/*# sourceMappingURL=app.css.map */

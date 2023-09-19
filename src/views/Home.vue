@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
+import { useGeneralStore } from '@/stores/general'
 import axios from '@/services/axios.config.js'
 import { Form } from 'vee-validate'
 import * as yup from 'yup'
@@ -11,6 +12,7 @@ import InputArea from '@/components/forms/InputArea.vue'
 import InputFile from '@/components/forms/InputFile.vue'
 
 const router = useRouter()
+const generalStore = useGeneralStore()
 
 const listGender = [
   { value: 'L', label: 'Laki-laki' },
@@ -135,15 +137,31 @@ const schema = yup.object({
   district: yup.string().required().label('Kecamatan'),
   village: yup.string().required().label('Kelurahan'),
   address: yup.string().required().max(255, 'Maks 255 karakter').label('Alamat'),
-  rt: yup.string().required().label('RT'),
-  rw: yup.string().required().label('RW'),
+  rt: yup.string().required().max(3, 'Maks 3 karakter').label('RT'),
+  rw: yup.string().required().max(3, 'Maks 3 karakter').label('RW'),
   incomeBefore: yup.string().required().label('Penghasilan sebelum pandemi'),
   incomeAfter: yup.string().required().label('Penghasilan setelah pandemi'),
   reason: yup.string().required().max(255, 'Maks 255 karakter').label('Alasan'),
 })
 
 const goVerify = (values) => {
-  console.log(values)
+  const gender = listGender.find(item => item.value === values.gender)
+
+  const prov = listProvince.value.find(item => item.id === values.province)
+  const reg = listRegency.value.find(item => item.id === values.regency)
+  const dist = listDistrict.value.find(item => item.id === values.district)
+  const vill = listVillage.value.find(item => item.id === values.village)
+
+  const data = {
+    ...values,
+    genderName: gender.label,
+    provinceName: prov.name,
+    regencyName: reg.name,
+    districtName: dist.name,
+    villageName: vill.name
+  }
+
+  generalStore.setForm(data)
   router.push('/verify')
 }
 
