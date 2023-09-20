@@ -29,12 +29,6 @@ const keyData = [
 
 const aggrement = ref(false)
 
-const formatRp = (value) => {
-  if (!value) return
-
-  return value.toString().replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1\.")
-}
-
 const goHome = () => {
   router.push('/')
 }
@@ -71,6 +65,34 @@ onMounted(() => {
     generalStore.setForm(data)
   }
 })
+
+const formatRp = (value) => {
+  if (!value) return
+
+  return value.toString().replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1\.")
+}
+
+const months = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember'
+]
+
+const formatDate = (value) => {
+  if (!value) return
+
+  const date = new Date(value)
+  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+}
 </script>
 
 <template>
@@ -84,6 +106,7 @@ onMounted(() => {
         </th>
         <td>
           <p v-if="item.key === 'incomeBefore' || item.key === 'incomeAfter'">Rp {{ formatRp(generalStore.form[item.key]) }}</p>
+          <p v-else-if="item.key === 'bornDate'">{{ formatDate(generalStore.form[item.key]) }}</p>
           <img v-else-if="item.key === 'fileKtp' || item.key === 'fileKK'" :src="generalStore.form[item.key]" :alt="generalStore.form[item.key]">
           <p v-else>{{ generalStore.form[item.key] }}</p>
         </td>
