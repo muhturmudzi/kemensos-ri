@@ -161,12 +161,45 @@ const goVerify = (values) => {
     villageName: vill.name
   }
 
+  localStorage.setItem('form', JSON.stringify(data))
   generalStore.setForm(data)
   router.push('/verify')
 }
 
 onMounted(() => {
   getProvinces()
+
+  if (!generalStore.form && !localStorage.getItem('form')) {
+    return
+  }
+
+  if (!generalStore.form && localStorage.getItem('form')) {
+    const data = JSON.parse(localStorage.getItem('form'))
+    generalStore.setForm(data)
+  }
+  
+  formValues.name = generalStore.form.name
+  formValues.nik = generalStore.form.nik
+  formValues.noKk = generalStore.form.noKk
+  formValues.bornDate = generalStore.form.bornDate
+  formValues.gender = generalStore.form.gender
+  formValues.fileKtp = generalStore.form.fileKtp
+  formValues.fileKK = generalStore.form.fileKK
+  formValues.province = generalStore.form.province
+  formValues.regency = generalStore.form.regency
+  formValues.district = generalStore.form.district
+  formValues.village = generalStore.form.village
+  formValues.address = generalStore.form.address
+  formValues.rt = generalStore.form.rt
+  formValues.rw = generalStore.form.rw
+  formValues.incomeBefore = generalStore.form.incomeBefore
+  formValues.incomeAfter = generalStore.form.incomeAfter
+  formValues.reason = generalStore.form.reason
+
+  provSelected.value = generalStore.form.province
+  regSelected.value = generalStore.form.regency
+  disctSelected.value = generalStore.form.district
+  vilSelected.value = generalStore.form.village
 })
 </script>
 

@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
 import { useGeneralStore } from '@/stores/general'
 import Step from '@/components/Step.vue'
 
@@ -26,6 +27,8 @@ const keyData = [
   { key: 'reason', label: 'Alasan Membutuhkan Bantuan' },
 ]
 
+const aggrement = ref(false)
+
 const formatRp = (value) => {
   if (!value) return
 
@@ -37,18 +40,43 @@ const goHome = () => {
 }
 
 const save = () => {
-  generalStore.showLoading()
+  if (!aggrement.value) return
 
+  generalStore.showLoading()
+  const math = Math.random()
+  
   setTimeout(() => {
     generalStore.hideLoading()
+
+    if (math < .5) {
+      alert('Data Gagal Disimpan')
+      return
+    }
+
+    alert('Sukses Menyimpan Data')
+    generalStore.$reset()
+    localStorage.clear()
+    router.push('/')
   }, 1500)
 }
+
+onMounted(() => {
+  if (!generalStore.form && !localStorage.getItem('form')) {
+    router.push('/')
+    return
+  }
+
+  if (!generalStore.form && localStorage.getItem('form')) {
+    const data = JSON.parse(localStorage.getItem('form'))
+    generalStore.setForm(data)
+  }
+})
 </script>
 
 <template>
   <Step :step="2" />
 
-  <section class="mb-6">
+  <section class="mb-6" v-if="generalStore.form">
     <table class="table">
       <tr v-for="item in keyData" :key="item.key">
         <th>
@@ -63,8 +91,15 @@ const save = () => {
     </table>
   </section>
 
+  <section class="mb-6">
+    <div class="flex items-center">
+      <input id="aggrement-checkbox" type="checkbox" v-model="aggrement" class="w-6 h-6 text-[#369AB0] bg-[#369AB0] border-gray-300 rounded cursor-pointer">
+      <label for="aggrement-checkbox" class="ml-3 text-sm font-medium">Saya menyatakan bahwa data yang diisikan adalah benar dan siap mempertanggungjawabkan apabila ditemukan ketidaksesuaian dalam data tersebut.</label>
+    </div>
+  </section>
+
   <section class="flex justify-center sm:justify-end">
     <button class="btn btn--primary-outline w-full sm:w-40 mr-2 sm:mr-4" @click="goHome()">Kembali</button>
-    <button class="btn btn--primary w-full sm:w-40" @click="save()">Simpan</button>
+    <button class="btn btn--primary w-full sm:w-40" :class="{'cursor-not-allowed opacity-50': !aggrement}" @click="save()">Simpan</button>
   </section>
 </template>

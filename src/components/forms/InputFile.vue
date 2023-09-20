@@ -27,6 +27,7 @@
     <button
       class="btn btn--primary-outline !text-sm !font-normal mb-2"
       @click="clickFile()"
+      type="button"
     >
       Klik untuk upload
     </button>
